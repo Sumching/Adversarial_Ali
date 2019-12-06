@@ -44,7 +44,7 @@ def get_loader(image_dir='./data/images', csv_file_dir='./data/dev.csv', mode='t
 
     data_loader = torch.utils.data.DataLoader(dataset=dataset,
                                   batch_size=batch_size,
-                                  shuffle=True,
+                                  shuffle=False,
                                   drop_last=False,
                                   num_workers=1)
     return data_loader

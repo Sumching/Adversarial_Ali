@@ -6,8 +6,9 @@ from torch.autograd import Variable
 import torchvision
 import torch.nn.functional as f
 import numpy as np
-model = tmodels.inception_v3(pretrained=True).cuda()
-print(model)
+model1 = tmodels.inception_v3(pretrained=True).cuda().eval()
+model = tmodels.vgg19(pretrained=True).cuda().eval()
+#print(model)
 
 #model = torch.nn.DataParallel(model).cuda().eval()
 def where(cond, x, y):
@@ -36,27 +37,43 @@ for idx, (xbatch, ybatch, targety_batch, FN) in enumerate(dataloader):
     #print(batch_x.shape)
     x_adv = Variable(batch_x.data, requires_grad=True)
     
-    #x_adv = hp(x_adv)
-    # for i in range(20):
-    #     h_adv = model(x_adv)
-    #     h_adv = f.sigmoid(h_adv)
-    #     cost1 = 0#torch.mean(torch.sum(batch_y*torch.log(h_adv), dim=1))
-    #     cost2 = -torch.mean(torch.sum(targety*torch.log(h_adv), dim=1))
-    #     cost = cost1 + cost2
-    #     model.zero_grad()
-    #     if x_adv.grad is not None:
-    #         x_adv.grad.data.fill_(0)
+    for i in range(20):
+        h_adv = model(x_adv)
+        h_adv = f.sigmoid(h_adv)
+        cost1 = torch.mean(torch.sum(batch_y*torch.log(h_adv), dim=1))
+        cost2 = -torch.mean(torch.sum(targety*torch.log(h_adv), dim=1))
+        cost = cost1 + cost2
+        model.zero_grad()
+        if x_adv.grad is not None:
+            x_adv.grad.data.fill_(0)
 
-    #     cost.backward()
-    #     x_adv.grad.sign_()
-    #     x_adv = x_adv - (2/255) * x_adv.grad
-    #     x_adv = where(x_adv>batch_x+eps, batch_x+eps, x_adv)
-    #     x_adv = where(x_adv<batch_x-eps, batch_x-eps, x_adv)
-    #     x_adv = torch.clamp(x_adv, -1, 1)
-    #     x_adv = Variable(x_adv.data, requires_grad=True)
-    #x_adv = x_adv[:,::-1,:,:]
-    #torchvision.utils.save_image(x_adv, "./images/"+name, normalize=True)
-    preds = model(x_adv).argmax(dim=1)
+        cost.backward()
+        x_adv.grad.sign_()
+        x_adv = x_adv - (2/255) * x_adv.grad
+        x_adv = where(x_adv>batch_x+eps, batch_x+eps, x_adv)
+        x_adv = where(x_adv<batch_x-eps, batch_x-eps, x_adv)
+        x_adv = torch.clamp(x_adv, -1, 1)
+        x_adv = Variable(x_adv.data, requires_grad=True)
+    for i in range(20):
+        h_adv = model1(x_adv)
+        h_adv = f.sigmoid(h_adv)
+        cost1 = torch.mean(torch.sum(batch_y*torch.log(h_adv), dim=1))
+        cost2 = -torch.mean(torch.sum(targety*torch.log(h_adv), dim=1))
+        cost = cost1 + cost2
+        model1.zero_grad()
+        if x_adv.grad is not None:
+            x_adv.grad.data.fill_(0)
+
+        cost.backward()
+        x_adv.grad.sign_()
+        x_adv = x_adv - (2/255) * x_adv.grad
+        x_adv = where(x_adv>batch_x+eps, batch_x+eps, x_adv)
+        x_adv = where(x_adv<batch_x-eps, batch_x-eps, x_adv)
+        x_adv = torch.clamp(x_adv, -1, 1)
+        x_adv = Variable(x_adv.data, requires_grad=True)
+    
+    torchvision.utils.save_image(x_adv, "./images/"+name, normalize=True)
+    preds = model1(x_adv).argmax(dim=1)
     true_list = preds.detach().cpu().numpy() == print_label.numpy()
     true_list1 = preds.detach().cpu().numpy() == print_label1.numpy()
     res += np.sum(true_list)
