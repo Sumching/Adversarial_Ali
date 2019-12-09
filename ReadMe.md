@@ -10,3 +10,4 @@
 |resnet18 | 先用IFGSM迭代10次，然后ILA迭代10次                                         | 0.100|迁移到InceptionV3上测试，分类准确率到80%|
 |Densenet121         | 同上                                                          |0.1339|迁移到InceptionV3上测试，分类准确率76%，而仅使用IFGSM的方法，分类准确率为93%|
 |Alexnet             |同上                                                           |      |迁移到InceptionV3上测试，分类准确率91%，而仅使用IFGSM的方法，分类准确率为93%|
+|SqueezeNet1.0 L3   | 同上             |         |                     |迁移到InceptionV3上测试，分类准确率74%，而仅使用IFGSM的方法，分类准确率为90%|                   
