@@ -13,3 +13,4 @@
 |SqueezeNet1.0 L3   | 同上                                                            |0.1200|迁移到InceptionV3上测试，分类准确率74%，而仅使用IFGSM的方法，分类准确率为90%|
 |inception_v3, inception_v4, inception_resnet_v2, resnet_V2, | **[Translation-Invariant-Attacks](https://github.com/dongyp13/Translation-Invariant-Attacks)**, untargeted |0.49||
 |inception_v3, inception_v4, inception_resnet_v2, resnet_V2, | **[Translation-Invariant-Attacks](https://github.com/dongyp13/Translation-Invariant-Attacks)**, targeted |0.44||
+|inception_v3, inception_v4, inception_resnet_v2, resnet_V2,prob=0.5，momentum=1.0，num_iter=50 | **[Translation-Invariant-Attacks](https://github.com/dongyp13/Translation-Invariant-Attacks)**, untargeted |0.66||
